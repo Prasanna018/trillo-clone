@@ -1,13 +1,96 @@
 'use client'
-import { SignInButton, SignUpButton, useUser } from '@clerk/nextjs'
+import { SignInButton, SignUpButton, useUser, UserButton } from '@clerk/nextjs'
 import { LayoutDashboard, Trello } from 'lucide-react'
 import React from 'react'
 import { Button } from './ui/button'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { usePathname } from 'next/navigation'
 
 const NavBar = () => {
-    const { isSignedIn } = useUser()
+    const { isSignedIn } = useUser();
+    const pathname = usePathname();
+    const isDashboardPage = pathname === '/dashboard';
+
+    if (isDashboardPage) {
+        return (
+            <motion.header
+                initial={{ y: -100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{
+                    type: 'spring',
+                    stiffness: 300,
+                    damping: 20,
+                    delay: 0.1
+                }}
+                className="sticky top-0 z-50 w-full"
+            >
+                {/* Stunning gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/70 via-blue-50/50 to-purple-50/70 backdrop-blur-xl"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-100/30 via-transparent to-purple-100/30"></div>
+
+                {/* Animated border effect */}
+                <motion.div
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.8, ease: "circOut" }}
+                    className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-400/40 to-transparent"
+                />
+
+                <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between h-20 items-center">
+                        {/* Logo with floating animation */}
+                        <Link href="/" className="flex items-center space-x-3 group">
+                            <motion.div
+                                whileHover={{
+                                    rotate: [0, 15, -5, 0],
+                                    scale: [1, 1.1, 1]
+                                }}
+                                animate={{
+                                    y: [0, -5, 0],
+                                    transition: {
+                                        duration: 4,
+                                        repeat: Infinity,
+                                        repeatType: "reverse"
+                                    }
+                                }}
+                                className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-400/30"
+                            >
+                                <Trello className="h-5 w-5 text-white" />
+                            </motion.div>
+                            <motion.span
+                                className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400"
+                                whileHover={{
+                                    scale: 1.05,
+                                    backgroundImage: "linear-gradient(to right, #2563eb, #3b82f6)"
+                                }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                Trillo
+                            </motion.span>
+                        </Link>
+
+                        {/* User button */}
+                        <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <UserButton
+                                afterSignOutUrl="/"
+                                appearance={{
+                                    elements: {
+                                        userButtonBox: "flex flex-row-reverse",
+                                        userButtonOuterIdentifier: "text-sm font-medium",
+                                        avatarBox: "h-9 w-9",
+                                    }
+                                }}
+                            />
+                        </motion.div>
+                    </div>
+                </div>
+            </motion.header>
+        )
+    }
 
     return (
         <motion.header
